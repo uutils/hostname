@@ -14,6 +14,7 @@ categories = ["command-line-utilities"]
 [dependencies]
 uucore = { workspace = true }
 clap = { workspace = true }
+hostname = { workspace = true }
 
 [lib]
 path = "src/hostname.rs"
