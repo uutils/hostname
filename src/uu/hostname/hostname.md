@@ -1,11 +1,11 @@
-# login
+# hostname
 
 ```
-login [-p] [-h host] [username] [ENV=VAR...]
+hostname  [-a|--alias] [-d|--domain] [-f|--fqdn|--long] [-A|--all-fqdns] [-i|--ip-address] [-I|--all-ip-addresses] [-s|--short] [-y|--yp|--nis]
 
-login [-p] [-h host] -f username
+hostname [-b|--boot] [-F|--file filename] [hostname]
 
-login [-p] -r host
+hostname [-h|--help] [-V|--version]
 ```
 
-begin session on the system
+Show or set the system's host name
