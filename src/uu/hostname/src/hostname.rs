@@ -14,7 +14,7 @@ const USAGE: &str = help_usage!("hostname.md");
 
 #[uucore::main]
 pub fn uumain(args: impl uucore::Args) -> UResult<()> {
-    let matches = uu_app().try_get_matches_from(args)?;
+    let _matches = uu_app().try_get_matches_from(args)?;
 
     // Retrieve and display the hostname
 
