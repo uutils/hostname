@@ -1,7 +1,7 @@
 # hostname (uutils)
 # * see the repository LICENSE, README, and CONTRIBUTING files for more information
 
-# spell-checker:ignore (libs) bigdecimal datetime fundu gethostid kqueue libselinux mangen memmap procfs uuhelp
+# spell-checker:ignore (libs) mangen procfs
 
 [package]
 name = "hostname"
@@ -23,6 +23,7 @@ build = "build.rs"
 
 [features]
 default = ["feat_common_core"]
+uudoc = []
 
 feat_common_core = [
   "hostname",
