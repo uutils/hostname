@@ -59,7 +59,7 @@ textwrap = { workspace = true }
 hostname = { optional = true, version = "0.0.1", package = "uu_hostname", path = "src/uu/hostname" }
 
 [dev-dependencies]
-pretty_assertions = "1"
+pretty_assertions = "1.4.0"
 regex = { workspace = true }
 tempfile = { workspace = true }
 libc = { workspace = true }
