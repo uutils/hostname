@@ -56,7 +56,7 @@ textwrap = { workspace = true }
 
 
 #
-hostname = { optional = true, version = "0.0.1", package = "uu_hostname", path = "src/uu/hostname" }
+hostname = { optional = true, version = "0.0.28", package = "uu_hostname", path = "src/uu/hostname" }
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
