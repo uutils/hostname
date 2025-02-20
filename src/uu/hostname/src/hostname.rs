@@ -8,6 +8,7 @@ use std::ffi::OsString;
 use clap::{crate_version, Arg, ArgAction, ArgGroup, ArgMatches, Command};
 
 use uucore::{error::UResult, format_usage, help_about, help_usage};
+
 const ABOUT: &str = help_about!("hostname.md");
 const USAGE: &str = help_usage!("hostname.md");
 
@@ -54,6 +55,7 @@ pub fn uumain(args: impl uucore::Args) -> UResult<()> {
     }
 }
 
+#[must_use]
 pub fn uu_app() -> Command {
     Command::new(uucore::util_name())
         .version(crate_version!())
@@ -111,7 +113,7 @@ pub fn uu_app() -> Command {
                 .help("short host name"),
         )
         .arg(
-            Arg::new(options::YP)
+            Arg::new(options::NIS)
                 .short('y')
                 .long(options::YP)
                 .visible_alias(options::NIS)
@@ -130,11 +132,16 @@ pub fn uu_app() -> Command {
                 .short('F')
                 .long(options::FILE)
                 .value_name(options::FILENAME)
+                .value_parser(value_parser!(PathBuf))
                 .action(ArgAction::Set)
                 .conflicts_with(options::HOSTNAME)
                 .help("read host name or NIS domain name from given file"),
         )
-        .arg(Arg::new(options::HOSTNAME).conflicts_with(options::FILE))
+        .arg(
+            Arg::new(options::HOSTNAME)
+                .value_parser(value_parser!(OsString))
+                .conflicts_with(options::FILE),
+        )
         .group(
             ArgGroup::new("get-group")
                 .args([
@@ -145,9 +152,9 @@ pub fn uu_app() -> Command {
                     options::IP_ADDRESS,
                     options::ALL_IP_ADDRESSES,
                     options::SHORT,
-                    options::YP,
+                    options::NIS,
                 ])
-                .multiple(true)
+                .multiple(false)
                 .conflicts_with("set-group"),
         )
         .group(
