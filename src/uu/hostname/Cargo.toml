@@ -14,6 +14,8 @@ categories = ["command-line-utilities"]
 [dependencies]
 uucore = { workspace = true }
 clap = { workspace = true }
+libc = { workspace = true }
+errno = { workspace = true }
 hostname = { workspace = true }
 
 [lib]
