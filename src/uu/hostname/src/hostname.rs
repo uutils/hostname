@@ -3,10 +3,16 @@
 // For the full copyright and license information, please view the LICENSE
 // file that was distributed with this source code.
 
+mod change;
+mod errors;
+mod net;
+mod print;
+mod utils;
+
 use std::ffi::OsString;
+use std::path::PathBuf;
 
-use clap::{crate_version, Arg, ArgAction, ArgGroup, ArgMatches, Command};
-
+use clap::{crate_version, value_parser, Arg, ArgAction, ArgGroup, Command};
 use uucore::{error::UResult, format_usage, help_about, help_usage};
 
 const ABOUT: &str = help_about!("hostname.md");
@@ -29,29 +35,45 @@ pub mod options {
     pub static YP: &str = "yp";
 }
 
-/// Retrieve and display the host name.
-fn query_host_name(args: ArgMatches) -> UResult<()> {
-    if args.args_present() {
-        todo!()
-    }
-
-    let hostname = hostname::get().unwrap_or(OsString::from(""));
-    let hostname = hostname.to_string_lossy();
-    println!("{}", hostname);
-    Ok(())
-}
-
-fn set_host_name(_args: ArgMatches) -> UResult<()> {
-    todo!()
-}
-
 #[uucore::main]
 pub fn uumain(args: impl uucore::Args) -> UResult<()> {
-    let matches = uu_app().try_get_matches_from(args)?;
+    let args = uu_app().try_get_matches_from(args)?;
 
-    match (matches.args_present(), matches.contains_id("set-group")) {
-        (false, _) | (true, false) => query_host_name(matches),
-        (true, true) => set_host_name(matches),
+    let _net_lib_guard = net::LibraryGuard::load()?;
+
+    if args.contains_id("set-group") {
+        if let Some(path) = args.get_one::<PathBuf>(options::FILE) {
+            change::from_file(path)
+        } else {
+            let host_name = args
+                .get_one::<OsString>(options::HOSTNAME)
+                .expect("hostname must be specified");
+
+            change::from_argument(host_name)
+        }
+    } else {
+        let host_name: &mut dyn print::PrintHostName = if args.get_flag(options::ALIAS) {
+            &mut print::AliasHostName
+        } else if args.get_flag(options::DOMAIN) {
+            &mut print::DomainHostName
+        } else if args.get_flag(options::FQDN) {
+            &mut print::FqdnHostName
+        } else if args.get_flag(options::ALL_FQDNS) {
+            &mut print::AllFqdnHostName
+        } else if args.get_flag(options::IP_ADDRESS) {
+            &mut print::IpAddressHostName
+        } else if args.get_flag(options::ALL_IP_ADDRESSES) {
+            &mut print::AllIpAddressesHostName
+        } else if args.get_flag(options::SHORT) {
+            &mut print::ShortHostName
+        } else if args.get_flag(options::NIS) {
+            &mut print::NisHostName
+        } else {
+            &mut print::DefaultHostName
+        };
+
+        let mut stdout = std::io::stdout();
+        host_name.print_host_name(&mut stdout)
     }
 }
 
