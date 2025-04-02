@@ -40,8 +40,18 @@ fn query_host_name(args: ArgMatches) -> UResult<()> {
     Ok(())
 }
 
-fn set_host_name(_args: ArgMatches) -> UResult<()> {
-    todo!()
+fn set_host_name(args: ArgMatches) -> UResult<()> {
+    let hostname = if let Some(file) = args.get_one::<String>(options::FILE) {
+        std::fs::read_to_string(file)?.trim().to_string()
+    } else if let Some(name) = args.get_one::<String>(options::HOSTNAME) {
+        name.to_string()
+    } else {
+        return Err(uucore::error::UUsageError::new(1, "No hostname specified"));
+    };
+
+    hostname::set(hostname)?;
+
+    Ok(())
 }
 
 #[uucore::main]
