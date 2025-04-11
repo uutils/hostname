@@ -1,20 +1,26 @@
 [package]
-name = "uu_hostname"
-version = "0.0.1"
-edition = "2021"
-authors = ["uutils developers"]
-license = "MIT"
+name        = "uu_hostname"
+version     = "0.0.1"
+edition     = "2021"
+authors     = ["uutils developers"]
+license     = "MIT"
 description = "hostname ~ (uutils) Execute a program periodically, showing output fullscreen"
 
-homepage = "https://github.com/uutils/hostname"
+homepage   = "https://github.com/uutils/hostname"
 repository = "https://github.com/uutils/hostname/tree/main/src/uu/hostname"
-keywords = ["acl", "uutils", "cross-platform", "cli", "utility"]
+keywords   = ["acl", "uutils", "cross-platform", "cli", "utility"]
 categories = ["command-line-utilities"]
 
 [dependencies]
 uucore = { workspace = true }
-clap = { workspace = true }
-hostname = { workspace = true }
+clap   = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+windows-sys = { workspace = true }
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+errno = { workspace = true }
+libc  = { workspace = true }
 
 [lib]
 path = "src/hostname.rs"
