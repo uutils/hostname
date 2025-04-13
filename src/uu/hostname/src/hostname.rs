@@ -12,7 +12,7 @@ mod utils;
 use std::ffi::OsString;
 use std::path::PathBuf;
 
-use clap::{crate_version, value_parser, Arg, ArgAction, ArgGroup, Command};
+use clap::{Arg, ArgAction, ArgGroup, Command, crate_version, value_parser};
 use uucore::{error::UResult, format_usage, help_about, help_usage};
 
 const ABOUT: &str = help_about!("hostname.md");
