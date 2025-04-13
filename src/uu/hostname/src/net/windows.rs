@@ -3,7 +3,7 @@
 // For the full copyright and license information, please view the LICENSE
 // file that was distributed with this source code.
 
-use std::ffi::{c_int, OsStr, OsString};
+use std::ffi::{OsStr, OsString, c_int};
 use std::os::windows::ffi::{OsStrExt, OsStringExt};
 use std::ptr::NonNull;
 use std::{mem, ptr};
@@ -14,12 +14,12 @@ use windows_sys::Win32::Foundation::{
     ERROR_MORE_DATA, ERROR_NO_DATA, ERROR_SUCCESS,
 };
 use windows_sys::Win32::NetworkManagement::IpHelper::{
-    GetAdaptersAddresses, GAA_FLAG_SKIP_DNS_SERVER, GAA_FLAG_SKIP_FRIENDLY_NAME,
+    GAA_FLAG_SKIP_DNS_SERVER, GAA_FLAG_SKIP_FRIENDLY_NAME, GetAdaptersAddresses,
     IP_ADAPTER_ADDRESSES_LH, IP_ADAPTER_UNICAST_ADDRESS_LH,
 };
 use windows_sys::Win32::Networking::WinSock::{
-    socklen_t, FreeAddrInfoW, GetAddrInfoW, GetNameInfoW, WSACleanup, WSAGetLastError, WSAStartup,
-    ADDRINFOW, AF_UNSPEC, IN6_ADDR, SOCKADDR, WSADATA, WSAENAMETOOLONG, WSAENOBUFS,
+    ADDRINFOW, AF_UNSPEC, FreeAddrInfoW, GetAddrInfoW, GetNameInfoW, IN6_ADDR, SOCKADDR,
+    WSACleanup, WSADATA, WSAENAMETOOLONG, WSAENOBUFS, WSAGetLastError, WSAStartup, socklen_t,
 };
 use windows_sys::Win32::System::SystemInformation::{
     ComputerNamePhysicalDnsDomain, ComputerNamePhysicalDnsFullyQualified,

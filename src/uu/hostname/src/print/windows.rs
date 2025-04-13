@@ -12,15 +12,15 @@ use windows_sys::Win32::NetworkManagement::IpHelper::{
 };
 use windows_sys::Win32::NetworkManagement::Ndis::IfOperStatusUp;
 use windows_sys::Win32::Networking::WinSock::{
-    AF_INET, AF_INET6, AF_UNSPEC, NI_NAMEREQD, NI_NUMERICHOST, SOCKADDR, SOCKADDR_IN6, SOCK_DGRAM,
+    AF_INET, AF_INET6, AF_UNSPEC, NI_NAMEREQD, NI_NUMERICHOST, SOCK_DGRAM, SOCKADDR, SOCKADDR_IN6,
     WSAHOST_NOT_FOUND,
 };
 
 use crate::errors::HostNameError;
 use crate::net::{
-    domain_name, fully_qualified_dns_name, get_name_info, host_name, in6_is_addr_linklocal,
-    in6_is_addr_mc_linklocal, short_host_name, AdapterUnicastAddressIter, AddressInfo,
-    InterfaceAddresses,
+    AdapterUnicastAddressIter, AddressInfo, InterfaceAddresses, domain_name,
+    fully_qualified_dns_name, get_name_info, host_name, in6_is_addr_linklocal,
+    in6_is_addr_mc_linklocal, short_host_name,
 };
 use crate::print::{
     AliasHostName, AllFqdnHostName, AllIpAddressesHostName, DefaultHostName, DomainHostName,

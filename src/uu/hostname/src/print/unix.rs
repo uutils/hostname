@@ -3,19 +3,19 @@
 // For the full copyright and license information, please view the LICENSE
 // file that was distributed with this source code.
 
-use std::ffi::{c_int, c_uint, CStr};
+use std::ffi::{CStr, c_int, c_uint};
 use std::ptr::NonNull;
 
 use libc::{
-    sockaddr, sockaddr_in, sockaddr_in6, socklen_t, AF_UNSPEC, AI_CANONNAME, IFF_LOOPBACK, IFF_UP,
-    NI_NAMEREQD, NI_NUMERICHOST, SOCK_DGRAM,
+    AF_UNSPEC, AI_CANONNAME, IFF_LOOPBACK, IFF_UP, NI_NAMEREQD, NI_NUMERICHOST, SOCK_DGRAM,
+    sockaddr, sockaddr_in, sockaddr_in6, socklen_t,
 };
 use uucore::error::UResult;
 
 use crate::errors::{GetNameOrAddrInfoError, HostNameError};
 use crate::net::{
-    domain_name, get_name_info, host_name, in6_is_addr_linklocal, in6_is_addr_mc_linklocal,
-    short_host_name, AddressInfo, InterfaceAddresses,
+    AddressInfo, InterfaceAddresses, domain_name, get_name_info, host_name, in6_is_addr_linklocal,
+    in6_is_addr_mc_linklocal, short_host_name,
 };
 use crate::print::{
     AliasHostName, AllFqdnHostName, AllIpAddressesHostName, DefaultHostName, DomainHostName,
