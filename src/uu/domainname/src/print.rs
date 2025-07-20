@@ -7,6 +7,4 @@
 mod unix;
 
 #[cfg(not(target_family = "windows"))]
-pub(crate) use unix::{print_domain_name};
-
-
+pub(crate) use unix::print_domain_name;

@@ -3,18 +3,17 @@
 // For the full copyright and license information, please view the LICENSE
 // file that was distributed with this source code.
 
-use std::ffi::{CStr, CString};
+use std::ffi::{CStr, CString, c_int};
 
 use uucore::error::UResult;
 
-use crate::errors::{DomainNameError};
+use crate::errors::DomainNameError;
 
 impl crate::net::LibraryGuard {
     pub(crate) fn load() -> std::io::Result<Self> {
         Ok(Self)
     }
 }
-
 
 pub(crate) fn domain_name() -> UResult<Option<CString>> {
     let mut buffer: Vec<u8> = vec![0_u8; 256];
@@ -51,16 +50,16 @@ pub(crate) fn domain_name() -> UResult<Option<CString>> {
             // else an error happened because a bigger buffer is needed.
         } else if let Some(index) = buffer.iter().position(|&b| b == 0_u8) {
             buffer.truncate(index + 1);
-                        
-            break Ok(Some(unsafe { CString::from_vec_with_nul_unchecked(buffer) }));
+
+            break Ok(Some(unsafe {
+                CString::from_vec_with_nul_unchecked(buffer)
+            }));
         }
         // else truncation happened because a bigger buffer is needed.
 
         buffer.resize_with(buffer.len() + 4096, Default::default);
     }
 }
-
-
 
 pub(crate) fn set_domain_name(domain_name: &CStr) -> UResult<()> {
     use std::io::{Error, ErrorKind};
@@ -98,4 +97,3 @@ pub(crate) fn set_domain_name(domain_name: &CStr) -> UResult<()> {
         _ => Err(err.into()),
     }
 }
-
