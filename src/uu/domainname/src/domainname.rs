@@ -29,7 +29,7 @@ pub fn uumain(args: impl uucore::Args) -> UResult<()> {
     let args = uu_app().try_get_matches_from(args)?;
 
     let _net_lib_guard = net::LibraryGuard::load()?;
-    
+
     if args.contains_id("set-group") {
         if let Some(path) = args.get_one::<PathBuf>(options::FILE) {
             change::from_file(path)
@@ -41,11 +41,9 @@ pub fn uumain(args: impl uucore::Args) -> UResult<()> {
             change::from_argument(domain_name)
         }
     } else {
-        
         let mut stdout = std::io::stdout();
         print::print_domain_name(&mut stdout)
-    }    
-    
+    }
 }
 
 #[must_use]
@@ -74,7 +72,7 @@ pub fn uu_app() -> Command {
             ArgGroup::new("set-group")
                 .args([options::FILE, options::HOSTNAME])
                 .multiple(true)
-                .requires("source-group")
+                .requires("source-group"),
         )
         .group(
             ArgGroup::new("source-group")
