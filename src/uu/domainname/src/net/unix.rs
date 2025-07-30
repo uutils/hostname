@@ -3,11 +3,21 @@
 // For the full copyright and license information, please view the LICENSE
 // file that was distributed with this source code.
 
-use std::ffi::{CStr, CString, c_int};
+use std::ffi::{CStr, CString};
 
 use uucore::error::UResult;
 
 use crate::errors::DomainNameError;
+
+#[cfg(any(
+    target_os = "dragonfly",
+    target_os = "freebsd",
+    target_os = "illumos",
+    target_os = "ios",
+    target_os = "macos",
+    target_os = "solaris",
+))]
+use std::ffi::c_int;
 
 impl crate::net::LibraryGuard {
     pub(crate) fn load() -> std::io::Result<Self> {
