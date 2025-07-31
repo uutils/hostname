@@ -21,21 +21,19 @@ const USAGE: &str = help_usage!("domainname.md");
 pub mod options {
     pub static FILE: &str = "file";
     pub static FILENAME: &str = "filename";
-    pub static HOSTNAME: &str = "hostname";
+    pub static DOMAINNAME: &str = "domainname";
 }
 
 #[uucore::main]
 pub fn uumain(args: impl uucore::Args) -> UResult<()> {
     let args = uu_app().try_get_matches_from(args)?;
 
-    let _net_lib_guard = net::LibraryGuard::load()?;
-
     if args.contains_id("set-group") {
         if let Some(path) = args.get_one::<PathBuf>(options::FILE) {
             change::from_file(path)
         } else {
             let domain_name = args
-                .get_one::<OsString>(options::HOSTNAME)
+                .get_one::<OsString>(options::DOMAINNAME)
                 .expect("domainname must be specified");
 
             change::from_argument(domain_name)
@@ -60,23 +58,23 @@ pub fn uu_app() -> Command {
                 .value_name(options::FILENAME)
                 .value_parser(value_parser!(PathBuf))
                 .action(ArgAction::Set)
-                .conflicts_with(options::HOSTNAME)
-                .help("read host name or NIS domain name from given file"),
+                .conflicts_with(options::DOMAINNAME)
+                .help("read domain name from given file"),
         )
         .arg(
-            Arg::new(options::HOSTNAME)
+            Arg::new(options::DOMAINNAME)
                 .value_parser(value_parser!(OsString))
                 .conflicts_with(options::FILE),
         )
         .group(
             ArgGroup::new("set-group")
-                .args([options::FILE, options::HOSTNAME])
+                .args([options::FILE, options::DOMAINNAME])
                 .multiple(true)
                 .requires("source-group"),
         )
         .group(
             ArgGroup::new("source-group")
-                .args([options::FILE, options::HOSTNAME])
+                .args([options::FILE, options::DOMAINNAME])
                 .multiple(false),
         )
 }
