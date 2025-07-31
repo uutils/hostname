@@ -19,12 +19,6 @@ use crate::errors::DomainNameError;
 ))]
 use std::ffi::c_int;
 
-impl crate::net::LibraryGuard {
-    pub(crate) fn load() -> std::io::Result<Self> {
-        Ok(Self)
-    }
-}
-
 pub(crate) fn domain_name() -> UResult<Option<CString>> {
     let mut buffer: Vec<u8> = vec![0_u8; 256];
     loop {
