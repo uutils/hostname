@@ -24,9 +24,7 @@ build = "build.rs"
 default = ["feat_common_core"]
 uudoc = []
 
-feat_common_core = [
-  "hostname",
-]
+feat_common_core = ["hostname", "dnsdomainname"]
 
 [workspace.dependencies]
 uucore = "0.1.0"
@@ -66,6 +64,7 @@ textwrap = { workspace = true }
 
 #
 hostname = { optional = true, version = "0.0.1", package = "uu_hostname", path = "src/uu/hostname" }
+dnsdomainname = { optional = true, version = "0.0.1", package = "uu_dnsdomainname", path = "src/uu/dnsdomainname" }
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
@@ -90,6 +89,10 @@ phf_codegen = { workspace = true }
 
 [[bin]]
 name = "hostname"
+path = "src/bin/hostname.rs"
+
+[[bin]]
+name = "dnsdomainname"
 path = "src/bin/hostname.rs"
 
 [[bin]]
