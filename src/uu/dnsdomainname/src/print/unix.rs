@@ -3,8 +3,8 @@
 // For the full copyright and license information, please view the LICENSE
 // file that was distributed with this source code.
 
-use std::ffi::CStr;
 use libc::{AF_UNSPEC, AI_CANONNAME, SOCK_DGRAM};
+use std::ffi::CStr;
 use uucore::error::UResult;
 
 use crate::net::{AddressInfo, host_name};

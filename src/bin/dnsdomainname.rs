@@ -4,12 +4,10 @@
 // file that was distributed with this source code.
 
 use std::env;
+use std::ffi::OsString;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    let exit_code = uu_dnsdomainname::uumain(args);
-    std::process::exit(match exit_code {
-        Ok(()) => 0,
-        Err(_) => 1,
-    });
+    let args: Vec<OsString> = env::args_os().collect();
+    let exit_code = dnsdomainname::uumain(args.into_iter());
+    std::process::exit(exit_code);
 }

@@ -72,7 +72,7 @@ impl AddressInfo {
         }
     }
 
-    pub(crate) fn first(&self) -> &libc::addrinfo {
+    pub(crate) fn first(&self) -> &crate::net::PlatformAddrInfo {
         unsafe { self.0.as_ref() }
     }
 }

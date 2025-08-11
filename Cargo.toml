@@ -93,7 +93,7 @@ path = "src/bin/hostname.rs"
 
 [[bin]]
 name = "dnsdomainname"
-path = "src/bin/hostname.rs"
+path = "src/bin/dnsdomainname.rs"
 
 [[bin]]
 name = "uudoc"

@@ -12,6 +12,7 @@ impl PrintHostName for DomainHostName {
         Err(std::io::Error::new(
             std::io::ErrorKind::Unsupported,
             "Windows not yet supported for dnsdomainname",
-        ).into())
+        )
+        .into())
     }
 }

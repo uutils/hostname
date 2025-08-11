@@ -9,3 +9,9 @@ pub(crate) use unix::*;
 pub(crate) use windows::*;
 
 pub(crate) struct LibraryGuard;
+
+// Type alias to make the interface consistent across platforms
+#[cfg(not(target_family = "windows"))]
+pub(crate) type PlatformAddrInfo = libc::addrinfo;
+#[cfg(target_family = "windows")]
+pub(crate) type PlatformAddrInfo = windows::DummyAddrInfo;
