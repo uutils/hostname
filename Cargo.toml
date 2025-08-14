@@ -95,6 +95,11 @@ name = "hostname"
 path = "src/bin/hostname.rs"
 
 [[bin]]
+name = "domainname"
+path = "src/bin/domainname.rs"
+
+
+[[bin]]
 name = "uudoc"
 path = "src/bin/uudoc.rs"
 required-features = ["uudoc"]
