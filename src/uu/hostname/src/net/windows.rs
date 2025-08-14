@@ -241,7 +241,7 @@ impl InterfaceAddresses {
         }
     }
 
-    pub(crate) fn iter(&self) -> InterfaceAddressesIter {
+    pub(crate) fn iter(&self) -> InterfaceAddressesIter<'_> {
         InterfaceAddressesIter {
             _ia: self,
             ptr: self.list,
@@ -337,7 +337,7 @@ impl AddressInfo {
         }
     }
 
-    pub(crate) fn iter(&self) -> AddressInfoIter {
+    pub(crate) fn iter(&self) -> AddressInfoIter<'_> {
         AddressInfoIter {
             _ia: self,
             ptr: Some(self.0),

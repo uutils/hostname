@@ -240,7 +240,7 @@ impl InterfaceAddresses {
         }
     }
 
-    pub(crate) fn iter(&self) -> InterfaceAddressesIter {
+    pub(crate) fn iter(&self) -> InterfaceAddressesIter<'_> {
         InterfaceAddressesIter {
             _ia: self,
             ptr: Some(self.0),
@@ -304,7 +304,7 @@ impl AddressInfo {
         unsafe { self.0.as_ref() }
     }
 
-    pub(crate) fn iter(&self) -> AddressInfoIter {
+    pub(crate) fn iter(&self) -> AddressInfoIter<'_> {
         AddressInfoIter {
             _ia: self,
             ptr: Some(self.0),
