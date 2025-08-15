@@ -21,7 +21,13 @@ impl fmt::Display for DomainNameError {
             Self::InvalidDomainName => write!(f, "the specified domainname is invalid"),
             Self::DomainNameTooLong => write!(f, "name too long"),
             Self::NoLocalDomainName => write!(f, "local domain name not set"),
+            #[cfg(not(windows))]
             Self::SetDomainNameDenied => write!(f, "you must be root to change the domain name"),
+            #[cfg(windows)]
+            Self::SetDomainNameDenied => write!(
+                f,
+                "you don't have necessary privileges to change the domain name"
+            ),
         }
     }
 }
