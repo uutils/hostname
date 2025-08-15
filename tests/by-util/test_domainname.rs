@@ -39,11 +39,20 @@ fn test_help() {
 }
 
 #[test]
+#[cfg(not(windows))]
 fn test_get_domainname() {
     domainname_cmd().succeeds().no_stderr();
 }
 
 #[test]
+#[cfg(windows)]
+fn test_get_domainname_windows() {
+    //domainname is not set in github windows vm
+    domainname_cmd().fails().stderr("local domain name not set");
+}
+
+#[test]
+#[cfg(not(windows))]
 fn test_set_domainname_without_superuser() {
     domainname_cmd()
         .arg("random-domainname")
@@ -79,6 +88,7 @@ fn test_set_domainname_from_empty_file() {
 }
 
 #[test]
+#[cfg(not(windows))]
 fn test_set_domainname_from_file_without_superuser() {
     let (at, mut cmd) = domainname_at_and_cmd();
     let file = "filename";
