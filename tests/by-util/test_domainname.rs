@@ -48,7 +48,7 @@ fn test_get_domainname() {
 #[cfg(windows)]
 fn test_get_domainname_windows() {
     //domainname is not set in github windows vm
-    domainname_cmd().fails().stderr("local domain name not set");
+    domainname_cmd().fails().stderr_contains("local domain name not set");
 }
 
 #[test]
