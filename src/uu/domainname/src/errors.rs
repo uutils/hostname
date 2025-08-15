@@ -37,7 +37,3 @@ impl UError for DomainNameError {
 }
 
 impl std::error::Error for DomainNameError {}
-
-#[cfg(not(target_family = "windows"))]
-#[derive(Debug, PartialEq, Eq)]
-pub struct GetNameOrAddrInfoError(pub(crate) std::ffi::c_int);
