@@ -8,10 +8,10 @@ pub(crate) fn parse_domain_name_file(path: &Path) -> UResult<Vec<u8>> {
 
     let first_byte = loop {
         let mut first_byte = [0_u8; 1];
-        if let Err(err) = file.read_exact(&mut first_byte) {
-            if err.kind() == std::io::ErrorKind::UnexpectedEof {
-                return Ok(Vec::default()); // Empty name.
-            }
+        if let Err(err) = file.read_exact(&mut first_byte)
+            && err.kind() == std::io::ErrorKind::UnexpectedEof
+        {
+            return Ok(Vec::default()); // Empty name.
         }
 
         match first_byte[0] {
