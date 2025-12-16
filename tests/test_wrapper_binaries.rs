@@ -14,10 +14,24 @@ fn run_output_from_cmd(cmd: &mut AssertCommand) -> (i32, String, String) {
 
 fn normalize_output(output: &(i32, String, String)) -> (i32, String, String) {
     use regex::Regex;
-    let re =
-        Regex::new(r"/.*/target/debug/[^\s]+").unwrap_or_else(|_| Regex::new(r"invalid").unwrap());
-    let stdout = re.replace_all(&output.1, "hostname").to_string();
-    let stderr = re.replace_all(&output.2, "hostname").to_string();
+
+    // Normalize CRLF to LF so comparisons succeed across platforms.
+    let mut stdout = output.1.replace("\r\n", "\n");
+    let mut stderr = output.2.replace("\r\n", "\n");
+
+    // Replace absolute/relative paths to the built binaries (handles both
+    // POSIX and Windows path separators and optional .exe suffix).
+    let path_re = Regex::new(r"[A-Za-z]:[\\/][^\s]*target(?:[\\/](?:debug|release))[\\/][^\s]+|/.*/target/(?:debug|release)/[^\s]+").unwrap();
+    stdout = path_re.replace_all(&stdout, "hostname").to_string();
+    stderr = path_re.replace_all(&stderr, "hostname").to_string();
+
+    // Replace any bare wrapper binary name occurrences (e.g., 'domainname' or 'domainname.exe') with 'hostname'
+    let name_re =
+        Regex::new(r"\b(?:dnsdomainname|domainname|ypdomainname|nisdomainname)\b(?:\.exe)?")
+            .unwrap();
+    stdout = name_re.replace_all(&stdout, "hostname").to_string();
+    stderr = name_re.replace_all(&stderr, "hostname").to_string();
+
     (output.0, stdout, stderr)
 }
 
