@@ -75,6 +75,7 @@ rand = { workspace = true }
 uutests = { workspace = true }
 ctor = { workspace = true }
 uucore = { workspace = true, features = ["entries", "process", "signals"] }
+assert_cmd = "2.0"
 
 [target.'cfg(unix)'.dev-dependencies]
 xattr = { workspace = true }

@@ -131,3 +131,17 @@ jobs:
         flags: ${{ steps.vars.outputs.CODECOV_FLAGS }}
         name: codecov-umbrella
         fail_ci_if_error: false
+
+  wrapper-tests:
+    name: wrapper binaries integration tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macOS-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v6
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Run wrapper binary tests
+        run: |
+          # Run only the wrapper integration tests to validate wrapper behavior
+          cargo test --test wrapper_binaries -- --nocapture
