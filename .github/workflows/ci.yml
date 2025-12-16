@@ -144,4 +144,4 @@ jobs:
       - name: Run wrapper binary tests
         run: |
           # Run only the wrapper integration tests to validate wrapper behavior
-          cargo test --test wrapper_binaries -- --nocapture
+          cargo test --test test_wrapper_binaries -- --nocapture
