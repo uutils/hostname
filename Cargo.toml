@@ -29,7 +29,7 @@ feat_common_core = [
 ]
 
 [workspace.dependencies]
-uucore = "0.2.0"
+uucore = "0.6.0"
 uutests = "0.6.0"
 ctor = "0.6.0"
 clap = { version = "4.5.4", features = ["wrap_help", "cargo"] }
