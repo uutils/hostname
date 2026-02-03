@@ -312,7 +312,7 @@ dependencies = [
  "procfs",
  "rand",
  "regex",
- "rlimit",
+ "rlimit 0.10.2",
  "tempfile",
  "textwrap",
  "uu_hostname",
@@ -354,9 +354,9 @@ checksum = "4a5f13b858c8d314ee3e8f639011f7ccefe71f97f96e50151fb991f267928e2c"
 
 [[package]]
 name = "jiff"
-version = "0.2.16"
+version = "0.2.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "49cce2b81f2098e7e3efc35bc2e0a6b7abec9d34128283d7a26fa8f32a6dbb35"
+checksum = "e67e8da4c49d6d9909fe03361f9b620f58898859f5c7aded68351e85e71ecf50"
 dependencies = [
  "jiff-static",
  "jiff-tzdb-platform",
@@ -369,9 +369,9 @@ dependencies = [
 
 [[package]]
 name = "jiff-static"
-version = "0.2.16"
+version = "0.2.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "980af8b43c3ad5d8d349ace167ec8170839f753a42d233ba19e08afe1850fa69"
+checksum = "e0c84ee7f197eca9a86c6fd6cb771e55eb991632f15f2bc3ca6ec838929e6e78"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -658,6 +658,15 @@ name = "rlimit"
 version = "0.10.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7043b63bd0cd1aaa628e476b80e6d4023a3b50eb32789f2728908107bd0c793a"
+dependencies = [
+ "libc",
+]
+
+[[package]]
+name = "rlimit"
+version = "0.11.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f35ee2729c56bb610f6dba436bf78135f728b7373bdffae2ec815b2d3eb98cc3"
 dependencies = [
  "libc",
 ]
@@ -950,9 +959,9 @@ dependencies = [
 
 [[package]]
 name = "uucore"
-version = "0.5.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b5eddd390f3fdef74f104a948559e6de29203f60f8f563c8c9f528cd4c88ee78"
+checksum = "b157ba598d7f7ed06f6dbc62999edb9d730b4d3fb58e503d8ad6d5fbe1e04391"
 dependencies = [
  "clap",
  "dns-lookup",
@@ -963,11 +972,10 @@ dependencies = [
  "libc",
  "nix",
  "os_display",
- "phf",
  "thiserror",
  "time",
  "unic-langid",
- "uucore_procs 0.5.0",
+ "uucore_procs 0.6.0",
  "wild",
 ]
 
@@ -984,9 +992,9 @@ dependencies = [
 
 [[package]]
 name = "uucore_procs"
-version = "0.5.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "47148309a1f7a989d165dabbbc7f2bf156d7ff6affe7d69c1c5bfb822e663ae6"
+checksum = "daa291a52608ac5a2f8539e119666e021baa6b8c01f22f02ed201bbae54cbbc0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1000,9 +1008,9 @@ checksum = "9c9e4945611996e885dc4eeae23f3d6f20cfb6e8f4bad4985c2222bbcf9a9745"
 
 [[package]]
 name = "uutests"
-version = "0.5.0"
+version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "29a84842bcddea9787b70feefc8a4aad9be182225b13b5ad7ee04bdb601673c6"
+checksum = "83559c0581b560419248e130b8d8a3d362ae1f4d0a150ac5c493cc0acdb1ae31"
 dependencies = [
  "ctor",
  "libc",
@@ -1010,9 +1018,9 @@ dependencies = [
  "pretty_assertions",
  "rand",
  "regex",
- "rlimit",
+ "rlimit 0.11.0",
  "tempfile",
- "uucore 0.5.0",
+ "uucore 0.6.0",
  "xattr",
 ]
 
