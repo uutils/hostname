@@ -13,10 +13,7 @@ use std::ffi::OsString;
 use std::path::PathBuf;
 
 use clap::{Arg, ArgAction, ArgGroup, Command, crate_version, value_parser};
-use uucore::{error::UResult, format_usage, help_about, help_usage};
-
-const ABOUT: &str = help_about!("hostname.md");
-const USAGE: &str = help_usage!("hostname.md");
+use uucore::{error::UResult, format_usage};
 
 pub mod options {
     pub static ALIAS: &str = "alias";
@@ -79,10 +76,15 @@ pub fn uumain(args: impl uucore::Args) -> UResult<()> {
 
 #[must_use]
 pub fn uu_app() -> Command {
+    let usage = "hostname [-a|--alias|-d|--domain|-f|--fqdn|--long|-A|--all-fqdns|-i|--ip-address|-I|--all-ip-addresses|-s|--short|-y|--yp|--nis]
+hostname [-b|--boot] {-F filename|--file filename|hostname}
+hostname {-h|--help}
+hostname {-V|--version}";
+
     Command::new(uucore::util_name())
         .version(crate_version!())
-        .about(ABOUT)
-        .override_usage(format_usage(USAGE))
+        .about("Show or set the system's host name")
+        .override_usage(format_usage(usage))
         .infer_long_args(true)
         .arg(
             Arg::new(options::ALIAS)
