@@ -14,18 +14,15 @@ fn init() {
 
 #[test]
 fn test_invalid_arg() {
-    init();
     new_ucmd!().arg("--definitely-invalid").fails().code_is(1);
 }
 
 #[test]
 fn test_help_flag() {
-    init();
     new_ucmd!().arg("--help").succeeds();
 }
 
 #[test]
 fn test_version_flag() {
-    init();
     new_ucmd!().arg("--version").succeeds();
 }

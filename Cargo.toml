@@ -65,6 +65,8 @@ textwrap = { workspace = true }
 
 #
 hostname = { optional = true, version = "0.0.1", package = "uu_hostname", path = "src/uu/hostname" }
+predicates = "3.1.4"
+assert_cmd = "2.1.2"
 
 [dev-dependencies]
 pretty_assertions = "1.4.0"
@@ -90,6 +92,22 @@ phf_codegen = { workspace = true }
 [[bin]]
 name = "hostname"
 path = "src/bin/hostname.rs"
+
+[[bin]]
+name = "domainname"
+path = "src/uu/domainname/src/main.rs"
+
+[[bin]]
+name = "dnsdomainname"
+path = "src/uu/dnsdomainname/src/main.rs"
+
+[[bin]]
+name = "nisdomainname"
+path = "src/uu/nisdomainname/src/main.rs"
+
+[[bin]]
+name= "ypdomainname"
+path = "src/uu/ypdomainname/src/main.rs"
 
 [[bin]]
 name = "uudoc"

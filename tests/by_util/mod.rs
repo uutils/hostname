@@ -1,2 +1,0 @@
-mod domainname;
-mod hostname;
