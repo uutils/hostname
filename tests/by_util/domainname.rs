@@ -11,10 +11,7 @@ fn assert_help(bin: &str) {
         .arg("--help")
         .assert()
         .success()
-        .stdout(
-            predicate::str::contains(bin)
-                .or(predicate::str::contains("Usage")),
-        );
+        .stdout(predicate::str::contains(bin).or(predicate::str::contains("Usage")));
 }
 
 /// Assert that `--version` succeeds and prints the binary name
