@@ -18,3 +18,7 @@ fn init() {
 #[cfg(feature = "hostname")]
 #[path = "by-util/test_hostname.rs"]
 mod test_hostname;
+
+#[cfg(feature = "dnsdomainname")]
+#[path = "by-util/test_dnsdomainname.rs"]
+mod test_dnsdomainname;
