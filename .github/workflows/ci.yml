@@ -4,6 +4,7 @@ name: Basic CI
 
 env:
   CARGO_TERM_COLOR: always
+  CARGO_INCREMENTAL: "0"
 
 jobs:
   check:
@@ -80,7 +81,6 @@ jobs:
     - name: Test
       run: cargo test --no-fail-fast
       env:
-        CARGO_INCREMENTAL: "0"
         RUSTC_WRAPPER: ""
         RUSTFLAGS: "-Cinstrument-coverage -Zcoverage-options=branch -Ccodegen-units=1 -Copt-level=0 -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
         RUSTDOCFLAGS: "-Cpanic=abort"
@@ -117,7 +117,7 @@ jobs:
         grcov . --binary-path="${COVERAGE_REPORT_DIR}" --output-type lcov --output-path "${COVERAGE_REPORT_FILE}" --branch --ignore build.rs --ignore "vendor/*" --ignore "/*" --ignore "[a-zA-Z]:/*" --excl-br-line "^\s*((debug_)?assert(_eq|_ne)?!|#\[derive\()"
         echo "report=${COVERAGE_REPORT_FILE}" >> $GITHUB_OUTPUT
     - name: Upload coverage results (to Codecov.io)
-      uses: codecov/codecov-action@v5
+      uses: codecov/codecov-action@v6
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
         files: ${{ steps.coverage.outputs.report }}

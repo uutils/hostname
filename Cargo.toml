@@ -29,22 +29,21 @@ feat_common_core = [
 ]
 
 [workspace.dependencies]
-uucore = "0.7.0"
-uutests = "0.7.0"
-ctor = "0.6.0"
 clap = { version = "4.5.4", features = ["wrap_help", "cargo"] }
 clap_complete = "4.5.2"
-clap_mangen = "0.2.20"
-regex = "1.10.4"
-libc = "0.2.154"
+clap_mangen = "0.3.0"
+ctor = "1.0.0"
 errno = "0.3"
+libc = "0.2.154"
 phf = "0.13.0"
 phf_codegen = "0.13.1"
-textwrap = { version = "0.16.1", features = ["terminal_size"] }
-xattr = "1.3.1"
-tempfile = "3.10.1"
 rand = { version = "0.10.0" }
+regex = "1.10.4"
+tempfile = "3.10.1"
+textwrap = { version = "0.16.1", features = ["terminal_size"] }
 utmpx = "0.2"
+uucore = "0.8.0"
+uutests = "0.8.0"
 windows-sys = { version = "0.61", features = [
   "Win32_Globalization",
   "Win32_Networking_WinSock",
@@ -53,14 +52,15 @@ windows-sys = { version = "0.61", features = [
   "Win32_System_SystemInformation",
   "Win32_Foundation",
 ] }
+xattr = "1.3.1"
 
 [dependencies]
 clap = { workspace = true }
 clap_complete = { workspace = true }
 clap_mangen = { workspace = true }
-uucore = { workspace = true }
 phf = { workspace = true }
 textwrap = { workspace = true }
+uucore = { workspace = true }
 
 
 #
@@ -69,14 +69,14 @@ predicates = "3.1.4"
 assert_cmd = "2.1.2"
 
 [dev-dependencies]
+ctor = { workspace = true }
+libc = { workspace = true }
 pretty_assertions = "1.4.0"
+rand = { workspace = true }
 regex = { workspace = true }
 tempfile = { workspace = true }
-libc = { workspace = true }
-rand = { workspace = true }
-uutests = { workspace = true }
-ctor = { workspace = true }
 uucore = { workspace = true, features = ["entries", "process", "signals"] }
+uutests = { workspace = true }
 
 [target.'cfg(unix)'.dev-dependencies]
 xattr = { workspace = true }
