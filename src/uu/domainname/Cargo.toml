@@ -1,10 +1,10 @@
 [package]
-name        = "uu_hostname"
-version     = "0.0.1"
-edition     = "2024"
+name = "uu_domainname"
+version = "0.0.1"
+edition = "2024"
 authors     = ["uutils developers"]
 license     = "MIT"
-description = "hostname ~ (uutils) show or set the system's host name"
+description = "domainname ~ (uutils) show or set the system's NIS/YP domain name"
 
 homepage   = "https://github.com/uutils/hostname"
 repository = "https://github.com/uutils/hostname/tree/main/src/uu/hostname"
@@ -23,8 +23,8 @@ errno = { workspace = true }
 libc  = { workspace = true }
 
 [lib]
-path = "src/hostname.rs"
+path = "src/domainname.rs"
 
 [[bin]]
-name = "hostname"
+name = "domainname"
 path = "src/main.rs"
