@@ -39,6 +39,7 @@ pub fn uumain(args: impl uucore::Args) -> UResult<()> {
     let _net_lib_guard = net::LibraryGuard::load()?;
 
     if args.contains_id(options::FILE) || args.contains_id(options::HOSTNAME) {
+        #[cfg(not(target_family = "windows"))]
         let nis_mode = args.get_flag(options::NIS);
         if let Some(path) = args.get_one::<PathBuf>(options::FILE) {
             #[cfg(not(target_family = "windows"))]
