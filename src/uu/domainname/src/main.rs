@@ -1,4 +1,4 @@
-// Wrapper binary: domainname -> hostname -d
+// Wrapper binary: domainname -> hostname -y
 fn main() {
     uucore::panic::mute_sigpipe_panic();
 
@@ -6,7 +6,7 @@ fn main() {
     use std::process;
 
     let args = std::env::args_os().skip(1);
-    let iter = (vec![OsString::from("hostname"), OsString::from("-d")].into_iter()).chain(args);
+    let iter = (vec![OsString::from("hostname"), OsString::from("-y")].into_iter()).chain(args);
 
     process::exit(hostname::uumain(iter));
 }

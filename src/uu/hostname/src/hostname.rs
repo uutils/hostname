@@ -38,14 +38,23 @@ pub fn uumain(args: impl uucore::Args) -> UResult<()> {
 
     let _net_lib_guard = net::LibraryGuard::load()?;
 
-    if args.contains_id("set-group") {
+    if args.contains_id(options::FILE) || args.contains_id(options::HOSTNAME) {
+        let nis_mode = args.get_flag(options::NIS);
         if let Some(path) = args.get_one::<PathBuf>(options::FILE) {
+            #[cfg(not(target_family = "windows"))]
+            if nis_mode {
+                return change::from_file_nis(path);
+            }
             change::from_file(path)
         } else {
             let host_name = args
                 .get_one::<OsString>(options::HOSTNAME)
                 .expect("hostname must be specified");
 
+            #[cfg(not(target_family = "windows"))]
+            if nis_mode {
+                return change::from_argument_nis(host_name);
+            }
             change::from_argument(host_name)
         }
     } else {
@@ -176,10 +185,14 @@ hostname {-V|--version}";
                     options::IP_ADDRESS,
                     options::ALL_IP_ADDRESSES,
                     options::SHORT,
-                    options::NIS,
                 ])
                 .multiple(false)
                 .conflicts_with("set-group"),
+        )
+        .group(
+            ArgGroup::new("nis-group")
+                .args([options::NIS])
+                .conflicts_with("get-group"),
         )
         .group(
             ArgGroup::new("set-group")
