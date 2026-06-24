@@ -14,6 +14,8 @@ pub enum HostNameError {
     NoLocalDomainName,
     SetHostNameDenied,
     #[cfg(not(target_family = "windows"))]
+    SetDomainNameDenied,
+    #[cfg(not(target_family = "windows"))]
     GetNameOrAddrInfo(GetNameOrAddrInfoError),
 }
 
@@ -24,6 +26,8 @@ impl fmt::Display for HostNameError {
             Self::HostNameTooLong => write!(f, "name too long"),
             Self::NoLocalDomainName => write!(f, "local domain name not set"),
             Self::SetHostNameDenied => write!(f, "you must be root to change the host name"),
+            #[cfg(not(target_family = "windows"))]
+            Self::SetDomainNameDenied => write!(f, "you must be root to change the domain name"),
             #[cfg(not(target_family = "windows"))]
             Self::GetNameOrAddrInfo(r) => write!(f, "{r}"),
         }

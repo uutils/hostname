@@ -10,11 +10,15 @@ use std::path::Path;
 use uucore::error::UResult;
 
 use crate::errors::HostNameError;
-use crate::net::set_host_name;
+use crate::net::{set_domain_name, set_host_name};
 use crate::utils::parse_host_name_file;
 
 pub(crate) fn from_file(path: &Path) -> UResult<()> {
     parse_host_name_file(path).map(Cow::Owned).and_then(run)
+}
+
+pub(crate) fn from_file_nis(path: &Path) -> UResult<()> {
+    parse_host_name_file(path).map(Cow::Owned).and_then(run_nis)
 }
 
 pub(crate) fn from_argument(host_name: &OsStr) -> UResult<()> {
@@ -31,6 +35,22 @@ pub(crate) fn from_argument(host_name: &OsStr) -> UResult<()> {
     };
 
     run(host_name)
+}
+
+pub(crate) fn from_argument_nis(domain_name: &OsStr) -> UResult<()> {
+    #[cfg(target_family = "unix")]
+    let domain_name = {
+        use std::os::unix::ffi::OsStrExt;
+        Cow::Borrowed(domain_name.as_bytes())
+    };
+
+    #[cfg(target_family = "wasm")]
+    let domain_name = {
+        use std::os::wasm::ffi::OsStrExt;
+        Cow::Borrowed(domain_name.as_bytes())
+    };
+
+    run_nis(domain_name)
 }
 
 fn run(mut host_name: Cow<[u8]>) -> UResult<()> {
@@ -52,6 +72,32 @@ fn run(mut host_name: Cow<[u8]>) -> UResult<()> {
     let host_name = validate_host_name(host_name)?;
 
     set_host_name(&host_name)
+}
+
+fn run_nis(mut domain_name: Cow<[u8]>) -> UResult<()> {
+    match &mut domain_name {
+        Cow::Borrowed(name) => *name = name.trim_ascii(),
+
+        Cow::Owned(name) => {
+            while name.first().is_some_and(u8::is_ascii_whitespace) {
+                name.remove(0);
+            }
+
+            while name.last().is_some_and(u8::is_ascii_whitespace) {
+                name.pop();
+            }
+        }
+    };
+
+    let domain_name = validate_domain_name(domain_name)?;
+    set_domain_name(&domain_name)
+}
+
+fn validate_domain_name(domain_name: Cow<[u8]>) -> Result<CString, HostNameError> {
+    if domain_name.is_empty() {
+        return Err(HostNameError::InvalidHostName);
+    }
+    CString::new(domain_name.into_owned()).map_err(|_| HostNameError::InvalidHostName)
 }
 
 fn validate_host_name(host_name: Cow<[u8]>) -> Result<CString, HostNameError> {
