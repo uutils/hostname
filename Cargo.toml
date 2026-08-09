@@ -6,7 +6,6 @@
 [package]
 name = "hostname"
 version = "0.0.1"
-authors = ["uutils developers"]
 license = "MIT"
 description = "hostname ~ implemented as universal (cross-platform) utils, written in Rust"
 default-run = "hostname"
