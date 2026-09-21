@@ -25,6 +25,7 @@ uudoc = []
 
 feat_common_core = [
   "hostname",
+  "domainname"
 ]
 
 [workspace.dependencies]
@@ -64,6 +65,7 @@ uucore = { workspace = true }
 
 #
 hostname = { optional = true, version = "0.0.1", package = "uu_hostname", path = "src/uu/hostname" }
+domainname = { optional = true, version = "0.0.1", package = "uu_domainname", path = "src/uu/domainname" }
 
 [dev-dependencies]
 ctor = { workspace = true }
@@ -89,6 +91,11 @@ phf_codegen = { workspace = true }
 [[bin]]
 name = "hostname"
 path = "src/bin/hostname.rs"
+
+[[bin]]
+name = "domainname"
+path = "src/bin/domainname.rs"
+
 
 [[bin]]
 name = "uudoc"
