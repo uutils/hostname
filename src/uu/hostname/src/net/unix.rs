@@ -113,7 +113,31 @@ pub(crate) fn short_host_name() -> std::io::Result<CString> {
     Ok(unsafe { CString::from_vec_with_nul_unchecked(bytes) })
 }
 
-pub(crate) fn set_domain_name(domain_name: &CStr) -> UResult<()> {
+#[cfg(any(
+    target_os = "dragonfly",
+    target_os = "freebsd",
+    target_os = "illumos",
+    target_os = "ios",
+    target_os = "macos",
+    target_os = "solaris",
+))]
+type SetNameLen = c_int;
+
+#[cfg(not(any(
+    target_os = "dragonfly",
+    target_os = "freebsd",
+    target_os = "illumos",
+    target_os = "ios",
+    target_os = "macos",
+    target_os = "solaris",
+)))]
+type SetNameLen = usize;
+
+fn set_name(
+    name: &CStr,
+    set_name: unsafe extern "C" fn(*const std::ffi::c_char, SetNameLen) -> c_int,
+    permission_denied_error: HostNameError,
+) -> UResult<()> {
     use std::io::{Error, ErrorKind};
 
     #[cfg(any(
@@ -124,7 +148,7 @@ pub(crate) fn set_domain_name(domain_name: &CStr) -> UResult<()> {
         target_os = "macos",
         target_os = "solaris",
     ))]
-    let Ok(domain_name_len) = c_int::try_from(domain_name.count_bytes()) else {
+    let Ok(name_len) = c_int::try_from(name.count_bytes()) else {
         return Err(Box::new(HostNameError::HostNameTooLong));
     };
 
@@ -136,55 +160,34 @@ pub(crate) fn set_domain_name(domain_name: &CStr) -> UResult<()> {
         target_os = "macos",
         target_os = "solaris",
     )))]
-    let domain_name_len = domain_name.count_bytes();
+    let name_len = name.count_bytes();
 
-    if unsafe { libc::setdomainname(domain_name.as_ptr(), domain_name_len) } != -1 {
+    if unsafe { set_name(name.as_ptr(), name_len) } != -1 {
         return Ok(());
     }
 
     let err = Error::last_os_error();
     match err.kind() {
-        ErrorKind::PermissionDenied => Err(Box::new(HostNameError::SetDomainNameDenied)),
+        ErrorKind::PermissionDenied => Err(Box::new(permission_denied_error)),
         ErrorKind::InvalidInput => Err(Box::new(HostNameError::HostNameTooLong)),
         _ => Err(err.into()),
     }
 }
 
+pub(crate) fn set_domain_name(domain_name: &CStr) -> UResult<()> {
+    set_name(
+        domain_name,
+        libc::setdomainname,
+        HostNameError::SetDomainNameDenied,
+    )
+}
+
 pub(crate) fn set_host_name(host_name: &CStr) -> UResult<()> {
-    use std::io::{Error, ErrorKind};
-
-    #[cfg(any(
-        target_os = "dragonfly",
-        target_os = "freebsd",
-        target_os = "illumos",
-        target_os = "ios",
-        target_os = "macos",
-        target_os = "solaris",
-    ))]
-    let Ok(host_name_len) = c_int::try_from(host_name.count_bytes()) else {
-        return Err(Box::new(HostNameError::HostNameTooLong));
-    };
-
-    #[cfg(not(any(
-        target_os = "dragonfly",
-        target_os = "freebsd",
-        target_os = "illumos",
-        target_os = "ios",
-        target_os = "macos",
-        target_os = "solaris",
-    )))]
-    let host_name_len = host_name.count_bytes();
-
-    if unsafe { libc::sethostname(host_name.as_ptr(), host_name_len) } != -1 {
-        return Ok(());
-    }
-
-    let err = Error::last_os_error();
-    match err.kind() {
-        ErrorKind::PermissionDenied => Err(Box::new(HostNameError::SetHostNameDenied)),
-        ErrorKind::InvalidInput => Err(Box::new(HostNameError::HostNameTooLong)),
-        _ => Err(err.into()),
-    }
+    set_name(
+        host_name,
+        libc::sethostname,
+        HostNameError::SetHostNameDenied,
+    )
 }
 
 #[allow(clippy::cast_possible_truncation, clippy::as_conversions)]

@@ -53,9 +53,8 @@ pub(crate) fn from_argument_nis(domain_name: &OsStr) -> UResult<()> {
     run_nis(domain_name)
 }
 
-fn run(mut host_name: Cow<[u8]>) -> UResult<()> {
-    // Trim white space.
-    match &mut host_name {
+fn trim_whitespace(name: &mut Cow<[u8]>) {
+    match name {
         Cow::Borrowed(name) => *name = name.trim_ascii(),
 
         Cow::Owned(name) => {
@@ -67,7 +66,11 @@ fn run(mut host_name: Cow<[u8]>) -> UResult<()> {
                 name.pop();
             }
         }
-    };
+    }
+}
+
+fn run(mut host_name: Cow<[u8]>) -> UResult<()> {
+    trim_whitespace(&mut host_name);
 
     let host_name = validate_host_name(host_name)?;
 
@@ -75,19 +78,7 @@ fn run(mut host_name: Cow<[u8]>) -> UResult<()> {
 }
 
 fn run_nis(mut domain_name: Cow<[u8]>) -> UResult<()> {
-    match &mut domain_name {
-        Cow::Borrowed(name) => *name = name.trim_ascii(),
-
-        Cow::Owned(name) => {
-            while name.first().is_some_and(u8::is_ascii_whitespace) {
-                name.remove(0);
-            }
-
-            while name.last().is_some_and(u8::is_ascii_whitespace) {
-                name.pop();
-            }
-        }
-    };
+    trim_whitespace(&mut domain_name);
 
     let domain_name = validate_domain_name(domain_name)?;
     set_domain_name(&domain_name)
@@ -95,9 +86,9 @@ fn run_nis(mut domain_name: Cow<[u8]>) -> UResult<()> {
 
 fn validate_domain_name(domain_name: Cow<[u8]>) -> Result<CString, HostNameError> {
     if domain_name.is_empty() {
-        return Err(HostNameError::InvalidHostName);
+        return Err(HostNameError::InvalidDomainName);
     }
-    CString::new(domain_name.into_owned()).map_err(|_| HostNameError::InvalidHostName)
+    CString::new(domain_name.into_owned()).map_err(|_| HostNameError::InvalidDomainName)
 }
 
 fn validate_host_name(host_name: Cow<[u8]>) -> Result<CString, HostNameError> {
