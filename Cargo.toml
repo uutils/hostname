@@ -95,19 +95,19 @@ path = "src/bin/hostname.rs"
 
 [[bin]]
 name = "domainname"
-path = "src/uu/domainname/src/main.rs"
+path = "src/bin/domainname.rs"
 
 [[bin]]
 name = "dnsdomainname"
-path = "src/uu/dnsdomainname/src/main.rs"
+path = "src/bin/domainname.rs"
 
 [[bin]]
 name = "nisdomainname"
-path = "src/uu/nisdomainname/src/main.rs"
+path = "src/bin/domainname.rs"
 
 [[bin]]
-name= "ypdomainname"
-path = "src/uu/ypdomainname/src/main.rs"
+name = "ypdomainname"
+path = "src/bin/domainname.rs"
 
 [[bin]]
 name = "uudoc"
