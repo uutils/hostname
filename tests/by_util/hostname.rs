@@ -75,7 +75,9 @@ fn test_set_empty_domain_name() {
         .assert()
         .failure()
         .code(1)
-        .stderr(predicates::str::contains("is invalid"));
+        .stderr(predicates::str::contains(
+            "the specified domain name is invalid",
+        ));
 }
 
 /// Write `contents` to a temporary file for use with `-F`.
@@ -126,7 +128,9 @@ fn test_set_domain_name_from_blank_file() {
         .assert()
         .failure()
         .code(1)
-        .stderr(predicates::str::contains("is invalid"));
+        .stderr(predicates::str::contains(
+            "the specified domain name is invalid",
+        ));
 }
 
 #[test]

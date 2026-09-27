@@ -86,9 +86,9 @@ fn run_with(
 
 fn validate_domain_name(domain_name: Cow<[u8]>) -> Result<CString, HostNameError> {
     if domain_name.is_empty() {
-        return Err(HostNameError::InvalidHostName);
+        return Err(HostNameError::InvalidDomainName);
     }
-    CString::new(domain_name.into_owned()).map_err(|_| HostNameError::InvalidHostName)
+    CString::new(domain_name.into_owned()).map_err(|_| HostNameError::InvalidDomainName)
 }
 
 fn validate_host_name(host_name: Cow<[u8]>) -> Result<CString, HostNameError> {
