@@ -10,9 +10,13 @@ use uucore::error::UError;
 #[derive(Debug, PartialEq, Eq)]
 pub enum HostNameError {
     InvalidHostName,
+    #[cfg(not(target_family = "windows"))]
+    InvalidDomainName,
     HostNameTooLong,
     NoLocalDomainName,
     SetHostNameDenied,
+    #[cfg(not(target_family = "windows"))]
+    SetDomainNameDenied,
     #[cfg(not(target_family = "windows"))]
     GetNameOrAddrInfo(GetNameOrAddrInfoError),
 }
@@ -21,9 +25,13 @@ impl fmt::Display for HostNameError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Self::InvalidHostName => write!(f, "the specified hostname is invalid"),
+            #[cfg(not(target_family = "windows"))]
+            Self::InvalidDomainName => write!(f, "the specified domain name is invalid"),
             Self::HostNameTooLong => write!(f, "name too long"),
             Self::NoLocalDomainName => write!(f, "local domain name not set"),
             Self::SetHostNameDenied => write!(f, "you must be root to change the host name"),
+            #[cfg(not(target_family = "windows"))]
+            Self::SetDomainNameDenied => write!(f, "you must be root to change the domain name"),
             #[cfg(not(target_family = "windows"))]
             Self::GetNameOrAddrInfo(r) => write!(f, "{r}"),
         }

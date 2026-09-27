@@ -66,8 +66,10 @@ uucore = { workspace = true }
 hostname = { optional = true, version = "0.0.1", package = "uu_hostname", path = "src/uu/hostname" }
 
 [dev-dependencies]
+assert_cmd = "2.1.2"
 ctor = { workspace = true }
 libc = { workspace = true }
+predicates = "3.1.4"
 pretty_assertions = "1.4.0"
 rand = { workspace = true }
 regex = { workspace = true }
@@ -89,6 +91,22 @@ phf_codegen = { workspace = true }
 [[bin]]
 name = "hostname"
 path = "src/bin/hostname.rs"
+
+[[bin]]
+name = "domainname"
+path = "src/bin/domainname.rs"
+
+[[bin]]
+name = "dnsdomainname"
+path = "src/bin/domainname.rs"
+
+[[bin]]
+name = "nisdomainname"
+path = "src/bin/domainname.rs"
+
+[[bin]]
+name = "ypdomainname"
+path = "src/bin/domainname.rs"
 
 [[bin]]
 name = "uudoc"
