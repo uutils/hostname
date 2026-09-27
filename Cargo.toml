@@ -6,7 +6,6 @@
 [package]
 name = "hostname"
 version = "0.0.1"
-authors = ["uutils developers"]
 license = "MIT"
 description = "hostname ~ implemented as universal (cross-platform) utils, written in Rust"
 default-run = "hostname"
@@ -35,15 +34,15 @@ clap_mangen = "0.3.0"
 ctor = "1.0.0"
 errno = "0.3"
 libc = "0.2.154"
-phf = "0.13.0"
-phf_codegen = "0.13.1"
+phf = "0.14.0"
+phf_codegen = "0.14.0"
 rand = { version = "0.10.0" }
 regex = "1.10.4"
 tempfile = "3.10.1"
 textwrap = { version = "0.16.1", features = ["terminal_size"] }
 utmpx = "0.2"
-uucore = "0.9.0"
-uutests = "0.9.0"
+uucore = "0.12.0"
+uutests = "0.12.0"
 windows-sys = { version = "0.61", features = [
   "Win32_Globalization",
   "Win32_Networking_WinSock",
