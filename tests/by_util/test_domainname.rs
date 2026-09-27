@@ -1,5 +1,5 @@
 // Tests for the domainname utilities: dnsdomainname, domainname, nisdomainname, and ypdomainname wrapper binaries,
-// These binaries are built from src/uu/*/src/main.rs and delegates to hostname.
+// These binaries are built from src/bin/domainname.rs and delegate to hostname.
 
 use assert_cmd::Command;
 use predicates::prelude::*;
