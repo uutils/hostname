@@ -4,7 +4,7 @@
 // file that was distributed with this source code.
 
 use std::borrow::Cow;
-use std::ffi::{CString, OsStr};
+use std::ffi::{CStr, CString, OsStr};
 use std::path::Path;
 
 use uucore::error::UResult;
@@ -53,29 +53,21 @@ pub(crate) fn from_argument_nis(domain_name: &OsStr) -> UResult<()> {
     run_nis(domain_name)
 }
 
-fn run(mut host_name: Cow<[u8]>) -> UResult<()> {
-    // Trim white space.
-    match &mut host_name {
-        Cow::Borrowed(name) => *name = name.trim_ascii(),
-
-        Cow::Owned(name) => {
-            while name.first().is_some_and(u8::is_ascii_whitespace) {
-                name.remove(0);
-            }
-
-            while name.last().is_some_and(u8::is_ascii_whitespace) {
-                name.pop();
-            }
-        }
-    };
-
-    let host_name = validate_host_name(host_name)?;
-
-    set_host_name(&host_name)
+fn run(host_name: Cow<[u8]>) -> UResult<()> {
+    run_with(host_name, validate_host_name, set_host_name)
 }
 
-fn run_nis(mut domain_name: Cow<[u8]>) -> UResult<()> {
-    match &mut domain_name {
+fn run_nis(domain_name: Cow<[u8]>) -> UResult<()> {
+    run_with(domain_name, validate_domain_name, set_domain_name)
+}
+
+fn run_with(
+    mut name: Cow<[u8]>,
+    validate: fn(Cow<[u8]>) -> Result<CString, HostNameError>,
+    set: fn(&CStr) -> UResult<()>,
+) -> UResult<()> {
+    // Trim white space.
+    match &mut name {
         Cow::Borrowed(name) => *name = name.trim_ascii(),
 
         Cow::Owned(name) => {
@@ -89,8 +81,7 @@ fn run_nis(mut domain_name: Cow<[u8]>) -> UResult<()> {
         }
     };
 
-    let domain_name = validate_domain_name(domain_name)?;
-    set_domain_name(&domain_name)
+    set(&validate(name)?)
 }
 
 fn validate_domain_name(domain_name: Cow<[u8]>) -> Result<CString, HostNameError> {
