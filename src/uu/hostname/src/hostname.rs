@@ -38,7 +38,7 @@ pub fn uumain(args: impl uucore::Args) -> UResult<()> {
 
     let _net_lib_guard = net::LibraryGuard::load()?;
 
-    if args.contains_id(options::FILE) || args.contains_id(options::HOSTNAME) {
+    if args.contains_id("set-group") {
         #[cfg(not(target_family = "windows"))]
         let nis_mode = args.get_flag(options::NIS);
         if let Some(path) = args.get_one::<PathBuf>(options::FILE) {
@@ -193,7 +193,13 @@ hostname {-V|--version}";
         .group(
             ArgGroup::new("nis-group")
                 .args([options::NIS])
-                .conflicts_with("get-group"),
+                .conflicts_with("get-group")
+                // Setting the NIS domain name is not supported on Windows.
+                .conflicts_with_all(if cfg!(target_family = "windows") {
+                    &["set-group"][..]
+                } else {
+                    &[][..]
+                }),
         )
         .group(
             ArgGroup::new("set-group")
