@@ -23,7 +23,9 @@ fn test_version_flag() {
     new_ucmd!()
         .arg("--version")
         .succeeds()
-        .stdout_contains("hostname ");
+        // uucore derives the util name from the binary's file name, which
+        // includes the `.exe` suffix on Windows.
+        .stdout_contains(format!("hostname{} ", std::env::consts::EXE_SUFFIX));
 }
 
 /// Setting a name as root would actually rename the machine running the tests.
