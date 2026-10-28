@@ -4,7 +4,7 @@ version     = "0.0.1"
 edition     = "2024"
 authors     = ["uutils developers"]
 license     = "MIT"
-description = "hostname ~ (uutils) Execute a program periodically, showing output fullscreen"
+description = "hostname ~ (uutils) show or set the system's host name"
 
 homepage   = "https://github.com/uutils/hostname"
 repository = "https://github.com/uutils/hostname/tree/main/src/uu/hostname"
