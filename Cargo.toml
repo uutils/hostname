@@ -10,7 +10,6 @@ license = "MIT"
 description = "hostname ~ implemented as universal (cross-platform) utils, written in Rust"
 default-run = "hostname"
 
-homepage = "https://github.com/uutils/hostname"
 repository = "https://github.com/uutils/hostname"
 readme = "README.md"
 keywords = ["hostname", "uutils", "cross-platform", "cli", "utility"]
