@@ -9,6 +9,6 @@ pub(crate) mod unix;
 pub(crate) mod windows;
 
 #[cfg(not(target_family = "windows"))]
-pub(crate) use unix::{from_argument, from_file};
+pub(crate) use unix::{from_argument, from_argument_nis, from_file, from_file_nis};
 #[cfg(target_family = "windows")]
 pub(crate) use windows::{from_argument, from_file};
