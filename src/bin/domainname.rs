@@ -12,9 +12,14 @@ use std::path::Path;
 use std::process;
 
 fn flag_for(binary_name: &str) -> &'static str {
-    match binary_name {
-        "dnsdomainname" => "-d",
-        _ => "-y", // domainname, nisdomainname, ypdomainname
+    // Allow a PROG_PREFIX (e.g. "uu-"), matched like in src/bin/hostname.rs.
+    if binary_name
+        .strip_suffix("dnsdomainname")
+        .is_some_and(|prefix| !prefix.ends_with(char::is_alphanumeric))
+    {
+        "-d"
+    } else {
+        "-y" // domainname, nisdomainname, ypdomainname
     }
 }
 
@@ -36,4 +41,25 @@ fn main() {
     .chain(args);
 
     process::exit(hostname::uumain(iter));
+}
+
+#[cfg(test)]
+mod tests {
+    use super::flag_for;
+
+    #[test]
+    fn test_flag_for() {
+        for (binary_name, flag) in [
+            ("dnsdomainname", "-d"),
+            ("uu-dnsdomainname", "-d"),
+            ("uu_dnsdomainname", "-d"),
+            ("xdnsdomainname", "-y"),
+            ("domainname", "-y"),
+            ("uu-domainname", "-y"),
+            ("nisdomainname", "-y"),
+            ("ypdomainname", "-y"),
+        ] {
+            assert_eq!(flag_for(binary_name), flag, "binary name: {binary_name}");
+        }
+    }
 }

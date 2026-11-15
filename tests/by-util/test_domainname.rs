@@ -6,6 +6,8 @@
 // Tests for the domainname utilities: dnsdomainname, domainname, nisdomainname, and ypdomainname wrapper binaries,
 // These binaries are built from src/bin/domainname.rs and delegates to hostname.
 
+#[cfg(unix)]
+use crate::is_root;
 use assert_cmd::Command;
 use predicates::prelude::*;
 
@@ -81,12 +83,6 @@ fn nisdomainname_version() {
 #[test]
 fn ypdomainname_version() {
     assert_version("ypdomainname");
-}
-
-/// Setting a name as root would actually change the domain of the machine running the tests.
-#[cfg(unix)]
-fn is_root() -> bool {
-    unsafe { libc::geteuid() == 0 }
 }
 
 /// The NIS domain name as reported by getdomainname(2), or `None` when it is unset.

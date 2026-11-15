@@ -3,7 +3,11 @@
 // For the full copyright and license information, please view the LICENSE
 // file that was distributed with this source code.
 
+#[cfg(unix)]
+use crate::is_root;
 use uutests::new_ucmd;
+use uutests::util::{AtPath, TestScenario, UCommand};
+use uutests::util_name;
 
 #[test]
 fn test_invalid_arg() {
@@ -28,10 +32,38 @@ fn test_version_flag() {
         .stdout_contains(format!("hostname{} ", std::env::consts::EXE_SUFFIX));
 }
 
-/// Setting a name as root would actually rename the machine running the tests.
+/// Like `at_and_ucmd!()`, but without the util name `new_ucmd!()` prepends,
+/// which the `hostname` binary would take as the host name to set.
+fn at_and_hostname_cmd() -> (AtPath, UCommand) {
+    let ts = TestScenario::new(util_name!());
+    let cmd = ts.cmd(&ts.bin_path);
+    (ts.fixtures.clone(), cmd)
+}
+
+#[test]
+fn test_nis_conflicts_with_get_flags() {
+    for flag in ["-s", "-d"] {
+        at_and_hostname_cmd()
+            .1
+            .args(&["-y", flag])
+            .fails()
+            .code_is(1)
+            .stderr_contains("the argument '--yp' cannot be used with");
+    }
+}
+
+#[test]
 #[cfg(unix)]
-fn is_root() -> bool {
-    unsafe { libc::geteuid() == 0 }
+fn test_set_nis_domain_name_requires_root() {
+    if is_root() {
+        return;
+    }
+    at_and_hostname_cmd()
+        .1
+        .args(&["-y", "uutils-test-domain"])
+        .fails()
+        .code_is(1)
+        .stderr_contains("you must be root to change the domain name");
 }
 
 #[test]
@@ -40,72 +72,48 @@ fn test_set_host_name_requires_root() {
     if is_root() {
         return;
     }
-    assert_cmd::Command::cargo_bin("hostname")
-        .unwrap()
+    at_and_hostname_cmd()
+        .1
         .arg("uutils-test-host")
-        .assert()
-        .failure()
-        .code(1)
-        .stderr(predicates::str::contains(
-            "you must be root to change the host name",
-        ));
-}
-
-/// Write `contents` to a temporary file for use with `-F`.
-#[cfg(unix)]
-fn name_file(contents: &str) -> tempfile::NamedTempFile {
-    use std::io::Write;
-
-    let mut file = tempfile::NamedTempFile::new().unwrap();
-    file.write_all(contents.as_bytes()).unwrap();
-    file
+        .fails()
+        .code_is(1)
+        .stderr_contains("you must be root to change the host name");
 }
 
 #[test]
 #[cfg(unix)]
 fn test_set_blank_host_name() {
-    assert_cmd::Command::cargo_bin("hostname")
-        .unwrap()
+    at_and_hostname_cmd()
+        .1
         .arg("  ")
-        .assert()
-        .failure()
-        .code(1)
-        .stderr(predicates::str::contains(
-            "the specified hostname is invalid",
-        ));
+        .fails()
+        .code_is(1)
+        .stderr_contains("the specified hostname is invalid");
 }
 
 #[test]
 #[cfg(unix)]
 fn test_set_host_name_from_blank_file() {
-    let file = name_file("  \n");
-    assert_cmd::Command::cargo_bin("hostname")
-        .unwrap()
-        .arg("-F")
-        .arg(file.path())
-        .assert()
-        .failure()
-        .code(1)
-        .stderr(predicates::str::contains(
-            "the specified hostname is invalid",
-        ));
+    let (at, mut ucmd) = at_and_hostname_cmd();
+    at.write("name", "  \n");
+    ucmd.arg("-F")
+        .arg("name")
+        .fails()
+        .code_is(1)
+        .stderr_contains("the specified hostname is invalid");
 }
 
 #[test]
 #[cfg(unix)]
 fn test_set_domain_name_from_blank_file() {
-    let file = name_file("  \n");
-    assert_cmd::Command::cargo_bin("hostname")
-        .unwrap()
-        .arg("-y")
+    let (at, mut ucmd) = at_and_hostname_cmd();
+    at.write("name", "  \n");
+    ucmd.arg("-y")
         .arg("-F")
-        .arg(file.path())
-        .assert()
-        .failure()
-        .code(1)
-        .stderr(predicates::str::contains(
-            "the specified domain name is invalid",
-        ));
+        .arg("name")
+        .fails()
+        .code_is(1)
+        .stderr_contains("the specified domain name is invalid");
 }
 
 #[test]
@@ -116,15 +124,11 @@ fn test_set_host_name_from_padded_file() {
     }
     // Reaching the permission check means the padding was trimmed and the
     // name passed validation.
-    let file = name_file("  uutils-test-host  \n");
-    assert_cmd::Command::cargo_bin("hostname")
-        .unwrap()
-        .arg("-F")
-        .arg(file.path())
-        .assert()
-        .failure()
-        .code(1)
-        .stderr(predicates::str::contains(
-            "you must be root to change the host name",
-        ));
+    let (at, mut ucmd) = at_and_hostname_cmd();
+    at.write("name", "  uutils-test-host  \n");
+    ucmd.arg("-F")
+        .arg("name")
+        .fails()
+        .code_is(1)
+        .stderr_contains("you must be root to change the host name");
 }
