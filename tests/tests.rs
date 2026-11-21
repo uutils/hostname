@@ -15,6 +15,16 @@ fn init() {
     }
 }
 
+/// Setting a name as root would actually change the machine running the tests.
+#[cfg(unix)]
+pub fn is_root() -> bool {
+    unsafe { libc::geteuid() == 0 }
+}
+
 #[cfg(feature = "hostname")]
 #[path = "by-util/test_hostname.rs"]
 mod test_hostname;
+
+#[cfg(feature = "hostname")]
+#[path = "by-util/test_domainname.rs"]
+mod test_domainname;
